@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from "@emotion/react";
+import { CssBaseline, responsiveFontSizes } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import React, { Suspense } from "react";
+import { theme } from "./constant/theme";
+import Provider from "./context/Provider";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import mainRoutes from "./routes";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <ThemeProvider theme={responsiveFontSizes(theme)}>
+        <CssBaseline />
+      </ThemeProvider>
+
+      <Provider>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading....</div>}>
+            <Routes>
+              {mainRoutes.map(({ name, path, components }) => (
+                <Route key={name} path={path} element={components} />
+              ))}
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </Provider>
+    </LocalizationProvider>
   );
 }
 
